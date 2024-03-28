@@ -3,6 +3,7 @@ import { config } from "dotenv";
 import { MongoClient } from "./database/mongo";
 import { MongoCreateUserRepository } from "./repositories/create-user/mongo-create-user";
 import { CreateUserController } from "./controllers/create-user/create-user";
+import { loginController } from "./controllers/login/loginController";
 
 config();
 
@@ -23,6 +24,8 @@ const main = async () => {
 
     res.send(body).status(statusCode);
   });
+
+
 
   const port = process.env.PORT || 8000;
 
