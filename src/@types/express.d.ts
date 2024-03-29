@@ -1,9 +1,9 @@
-import {User} from "src/models/user.ts"
+import { UserDocument } from "../models/userModel";
 
 declare global {
-  namespace Express{
+  namespace Express {
     export interface Request {
-      user: Partial<User>
+      user: Partial<UserDocument>;
     }
   }
 }

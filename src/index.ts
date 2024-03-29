@@ -1,31 +1,45 @@
 import express from "express";
 import { config } from "dotenv";
-import { MongoClient } from "./database/mongo";
-import { MongoCreateUserRepository } from "./repositories/create-user/mongo-create-user";
-import { CreateUserController } from "./controllers/create-user/create-user";
-import { loginController } from "./controllers/login/loginController";
+// import { MongoCreateUserRepository } from "./repositories/create-user/mongo-create-user";
+// import { CreateUserController } from "./controllers/create/create-user";
+import mongoose from "mongoose";
+import router from "./routes";
 
 config();
 
 const main = async () => {
   const app = express();
+  app.use(express.json());
 
-  await MongoClient.connect();
+  const mongoURL = process.env.MONGODB_URL;
+  if (!mongoURL) {
+    console.error("MONGODB_URL não definida no arquivo .env");
+    process.exit(1);
+  }
 
-  app.post("/users", async (req, res) => {
-    const mongoCreateUserRepository = new MongoCreateUserRepository();
-    const createUserController = new CreateUserController(
-      mongoCreateUserRepository
-    );
-    console.log(req.body);
-    const { body, statusCode } = await createUserController.handle({
-      body: req.body,
+  mongoose
+    .connect(mongoURL, {})
+    .then(() => {
+      console.log("Connected to MongoDB");
+    })
+    .catch((error) => {
+      console.error("Error connecting to MongoDB:", error);
+      process.exit(1);
     });
 
-    res.send(body).status(statusCode);
-  });
+  // app.post("/users", async (req, res) => {
+  //   const mongoCreateUserRepository = new MongoCreateUserRepository();
+  //   const createUserController = new CreateUserController(
+  //     mongoCreateUserRepository
+  //   );
+  //   const { body, statusCode } = await createUserController.handle({
+  //     body: req.body,
+  //   });
 
+  //   res.send(body).status(statusCode);
+  // });
 
+  app.use("/api", router);
 
   const port = process.env.PORT || 8000;
 
