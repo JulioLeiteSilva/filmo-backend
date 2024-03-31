@@ -10,8 +10,6 @@ router.post("/create", userController.createUser);
 
 router.post("/login", userController.login);
 
-// router.use(authMiddleware);
 
-// router.get("/profile", userController.getProfile);
 
 export default router;

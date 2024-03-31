@@ -58,7 +58,6 @@ export class UserController {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     return res.json({
       user: respondeData,
-      token: token,
     });
   }
 

@@ -1,9 +1,11 @@
+import 'express-async-errors'
 import express from "express";
 import { config } from "dotenv";
 // import { MongoCreateUserRepository } from "./repositories/create-user/mongo-create-user";
 // import { CreateUserController } from "./controllers/create/create-user";
 import mongoose from "mongoose";
 import router from "./routes";
+import { errorMiddleware } from './middlewares/error';
 
 config();
 
@@ -40,7 +42,7 @@ const main = async () => {
   // });
 
   app.use("/api", router);
-
+  app.use(errorMiddleware)
   const port = process.env.PORT || 8000;
 
   app.listen(port, () => console.log(`listening on port ${port}`));
