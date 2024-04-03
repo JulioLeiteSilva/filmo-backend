@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import  { Request, Response } from "express";
 import { BadRequestError } from "../helpers/api-error";
 import UserModel from "../models/userModel";
 import bcrypt from "bcrypt";
@@ -43,11 +43,10 @@ export class UserController {
       throw new BadRequestError("E-mail ou senha inválidos");
     }
 
-    const token = jwt.sign({ id: user.id }, process.env.JWT_PASS ?? "", {
+    const token = jwt.sign({ id: user.id}, process.env.JWT_PASS ?? "", {
       expiresIn: "6h",
     });
     const respondeData = {
-      id: user._id,
       name: user.name,
       username: user.username,
       email: user.email,
@@ -61,7 +60,7 @@ export class UserController {
     });
   }
 
-  // async getProfile(req: Request, res: Response) {
-  //   return res.json(req.user);
-  // }
+  async getProfile(req: Request, res: Response) {
+    return res.json(req.user);
+  }
 }
