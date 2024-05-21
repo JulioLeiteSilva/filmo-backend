@@ -7,6 +7,7 @@ export interface UserDocument extends Document {
   email: string;
   cellphone: string;
   password: string;
+  myList: Array<string>;
 }
 
 const UserSchema = new Schema<UserDocument>({
@@ -15,6 +16,7 @@ const UserSchema = new Schema<UserDocument>({
   email: { type: String, required: true },
   cellphone: { type: String, required: true },
   password: { type: String, required: true },
+  myList: [String],
 });
 
 UserSchema.pre<UserDocument>("save", async function (next) {
@@ -32,5 +34,4 @@ UserSchema.pre<UserDocument>("save", async function (next) {
 });
 
 const UserModel = mongoose.model<UserDocument>("User", UserSchema);
-
 export default UserModel;
