@@ -4,7 +4,8 @@ import { config } from "dotenv";
 // import { MongoCreateUserRepository } from "./repositories/create-user/mongo-create-user";
 // import { CreateUserController } from "./controllers/create/create-user";
 import mongoose from "mongoose";
-import router from "./routes";
+import userRoute from "./routes/UserRoute";
+import iaRoute from "./routes/IaRoute";
 import { errorMiddleware } from './middlewares/error';
 
 config();
@@ -41,7 +42,7 @@ const main = async () => {
   //   res.send(body).status(statusCode);
   // });
 
-  app.use("/api", router);
+  app.use("/api", userRoute,iaRoute);
   app.use(errorMiddleware)
   const port = process.env.PORT || 8000;
 
