@@ -12,28 +12,31 @@ export class MovieController {
     }
   }
 
-  async getBestRatedMoviesTittlesByGenre(req: Request, res: Response): Promise<void>{
-    const {genre} = req.body;
+  async getBestRatedMoviesTittlesByGenre(
+    req: Request,
+    res: Response
+  ): Promise<void> {
+    const { genre } = req.body;
     if (!genre) {
-      res.status(400).send('Genre parameter is required');
+      res.status(400).send("Genre parameter is required");
       return;
     }
     try {
       const movies = await MovieModel.find(
-      {
-        genre: genre,
-        orig_lang: 'English',
-        status: 'Released',
-      },
-      {orig_tittle: 1}
+        {
+          genre: { $regex: `^${genre}`, $options: "i" },
+          orig_lang: " English",
+          status: " Released",
+        },
+        { _id: 0, names: 1 }
       )
-        .sort({ rating: -1 })
+        .sort({ score: -1 })
         .limit(20)
         .exec();
 
       res.status(200).json(movies);
     } catch (error) {
-      res.status(500).send('Internal server error');
+      res.status(500).send("Internal server error");
     }
   }
 }
