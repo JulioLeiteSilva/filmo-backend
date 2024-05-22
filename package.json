@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --watch 'src/' --exec npx ts-node src/index.ts"
+    "dev": "tsx watch --env-file=.env src/index.ts"
   },
   "keywords": [],
   "author": "",
@@ -24,6 +24,7 @@
     "prettier": "^3.2.5",
     "ts-node": "^10.9.2",
     "tsc": "^2.0.4",
+    "tsx": "^4.10.5",
     "typescript": "^5.4.3"
   },
   "dependencies": {
@@ -33,6 +34,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.5.0",
     "mongoose": "^8.2.4",
-    "node-fetch": "^2.7.0"
+    "node-fetch": "^2.7.0",
+    "zod": "^3.23.8"
   }
 }

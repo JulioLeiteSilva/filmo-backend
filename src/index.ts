@@ -1,4 +1,4 @@
-import 'express-async-errors'
+import "express-async-errors";
 import express from "express";
 import { config } from "dotenv";
 // import { MongoCreateUserRepository } from "./repositories/create-user/mongo-create-user";
@@ -6,47 +6,54 @@ import { config } from "dotenv";
 import mongoose from "mongoose";
 import userRoute from "./routes/UserRoute";
 import iaRoute from "./routes/IaRoute";
-import { errorMiddleware } from './middlewares/error';
+import { errorMiddleware } from "./middlewares/error";
+import { env } from "./config/env";
+import { ZodError } from "zod";
+import MovieRoute from "./routes/MovieRoute";
 
 config();
 
 const main = async () => {
-  const app = express();
-  app.use(express.json());
+  try {
+    const app = express();
+    app.use(express.json());
 
-  const mongoURL = process.env.MONGODB_URL;
-  if (!mongoURL) {
-    console.error("MONGODB_URL não definida no arquivo .env");
+    const mongoURL = env.MONGODB_URL;
+
+    mongoose
+      .connect(mongoURL, {})
+      .then(() => {
+        console.log("Connected to MongoDB");
+      })
+      .catch((error) => {
+        console.error("Error connecting to MongoDB:", error);
+        process.exit(1);
+      });
+
+    // app.post("/users", async (req, res) => {
+    //   const mongoCreateUserRepository = new MongoCreateUserRepository();
+    //   const createUserController = new CreateUserController(
+    //     mongoCreateUserRepository
+    //   );
+    //   const { body, statusCode } = await createUserController.handle({
+    //     body: req.body,
+    //   });
+
+    //   res.send(body).status(statusCode);
+    // });
+
+    app.use("/api", userRoute, iaRoute, MovieRoute);
+    app.use(errorMiddleware);
+    const port = env.PORT || 8000;
+
+    app.listen(port, () => console.log(`listening on port ${port}`));
+  } catch (err) {
+    if (err instanceof ZodError) {
+      console.error(err);
+      process.exit(1);
+    }
     process.exit(1);
   }
-
-  mongoose
-    .connect(mongoURL, {})
-    .then(() => {
-      console.log("Connected to MongoDB");
-    })
-    .catch((error) => {
-      console.error("Error connecting to MongoDB:", error);
-      process.exit(1);
-    });
-
-  // app.post("/users", async (req, res) => {
-  //   const mongoCreateUserRepository = new MongoCreateUserRepository();
-  //   const createUserController = new CreateUserController(
-  //     mongoCreateUserRepository
-  //   );
-  //   const { body, statusCode } = await createUserController.handle({
-  //     body: req.body,
-  //   });
-
-  //   res.send(body).status(statusCode);
-  // });
-
-  app.use("/api", userRoute,iaRoute);
-  app.use(errorMiddleware)
-  const port = process.env.PORT || 8000;
-
-  app.listen(port, () => console.log(`listening on port ${port}`));
 };
 
 main();
