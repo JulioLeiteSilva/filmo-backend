@@ -1,8 +1,6 @@
 import "express-async-errors";
 import express from "express";
 import { config } from "dotenv";
-// import { MongoCreateUserRepository } from "./repositories/create-user/mongo-create-user";
-// import { CreateUserController } from "./controllers/create/create-user";
 import mongoose from "mongoose";
 import userRoute from "./routes/UserRoute";
 import iaRoute from "./routes/IaRoute";
@@ -30,18 +28,7 @@ const main = async () => {
         process.exit(1);
       });
 
-    // app.post("/users", async (req, res) => {
-    //   const mongoCreateUserRepository = new MongoCreateUserRepository();
-    //   const createUserController = new CreateUserController(
-    //     mongoCreateUserRepository
-    //   );
-    //   const { body, statusCode } = await createUserController.handle({
-    //     body: req.body,
-    //   });
-
-    //   res.send(body).status(statusCode);
-    // });
-
+    
     app.use("/api", userRoute, iaRoute, MovieRoute);
     app.use(errorMiddleware);
     const port = env.PORT || 8000;
