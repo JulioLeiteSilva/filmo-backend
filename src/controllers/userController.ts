@@ -3,6 +3,8 @@ import { BadRequestError } from "../helpers/api-error";
 import UserModel from "../models/userModel";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { MovieService } from "../services/iaService";
+import { Movie } from "../models/tmdbMovieModel";
 
 export class UserController {
   async createUser(req: Request, res: Response) {
@@ -51,12 +53,29 @@ export class UserController {
     const token = jwt.sign({ id: user.id }, process.env.JWT_PASS ?? "", {
       expiresIn: "6h",
     });
+
+
+    const myList: string[] = user.myList;
+    let results: Movie[] = [];
+    const movieService = new MovieService();
+
+    if(myList.length > 0) {
+        results = await Promise.all(
+        myList.map(async (query) => {
+          const result = await movieService.searchMovie(query);
+          return result.results[0]; // Assumindo que `results` é o array de resultados da API
+        })
+      );
+    }
+    
+
     const respondeData = {
       name: user.name,
       username: user.username,
       email: user.email,
       cellphone: user.cellphone,
       token: token,
+      myList: results
     };
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import MovieModel from "../models/movieModel";
+import { MovieService } from "../services/iaService";
+import { Movie } from "../models/tmdbMovieModel";
 
 export class MovieController {
   async getAllMoviesTittles(req: Request, res: Response) {
@@ -33,8 +35,19 @@ export class MovieController {
         .sort({ score: -1 })
         .limit(20)
         .exec();
+      
+      const movieService = new MovieService();
+      const movieTitles = movies.map((movie) => movie.names);
+      const results: Movie[] = await Promise.all(
+        movieTitles.map(async (query) => {
+          const result = await movieService.searchMovie(query);
+          return result.results[0]; // Assumindo que `results` é o array de resultados da API
+        }))  
 
-      res.status(200).json(movies);
+        
+
+
+      res.status(200).json(results);
     } catch (error) {
       res.status(500).send("Internal server error");
     }
