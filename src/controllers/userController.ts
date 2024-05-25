@@ -54,20 +54,18 @@ export class UserController {
       expiresIn: "6h",
     });
 
-
     const myList: string[] = user.myList;
     let results: Movie[] = [];
     const movieService = new MovieService();
 
-    if(myList.length > 0) {
-        results = await Promise.all(
+    if (myList.length > 0) {
+      results = await Promise.all(
         myList.map(async (query) => {
           const result = await movieService.searchMovie(query);
           return result.results[0]; // Assumindo que `results` é o array de resultados da API
         })
       );
     }
-    
 
     const respondeData = {
       name: user.name,
@@ -75,7 +73,7 @@ export class UserController {
       email: user.email,
       cellphone: user.cellphone,
       token: token,
-      myList: results
+      myList: results,
     };
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -90,9 +88,9 @@ export class UserController {
 
   async addTittle(req: Request, res: Response) {
     try {
-      const { id, tittle } = req.body;
+      const { email, tittle } = req.body;
+      const user = await UserModel.findOne({ email: email });
 
-      const user = await UserModel.findById(id);
       if (!user) {
         throw new BadRequestError("Usuário não encontrado");
       }
@@ -109,16 +107,15 @@ export class UserController {
       if (error instanceof BadRequestError) {
         res.status(error.statusCode).json({ error: error.message });
       } else {
-        res.status(500).json({ error: "Internal server error" });
+        res.status(500).json({ error: error });
       }
     }
   }
 
   async deleteTittle(req: Request, res: Response) {
     try {
-      const { id, tittle } = req.body;
-
-      const user = await UserModel.findById(id);
+      const { email, tittle } = req.body;
+      const user = await UserModel.findOne({ email: email });
       if (!user) {
         throw new BadRequestError("Usuário não encontrado");
       }
