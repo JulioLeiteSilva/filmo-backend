@@ -19,6 +19,7 @@ export class MovieController {
     res: Response
   ): Promise<void> {
     const { genre } = req.body;
+    console.log(genre);
     if (!genre) {
       res.status(400).send("Genre parameter is required");
       return;
@@ -35,17 +36,16 @@ export class MovieController {
         .sort({ score: -1 })
         .limit(20)
         .exec();
-      
+
       const movieService = new MovieService();
       const movieTitles = movies.map((movie) => movie.names);
+      console.log(movieTitles);
       const results: Movie[] = await Promise.all(
         movieTitles.map(async (query) => {
           const result = await movieService.searchMovie(query);
           return result.results[0]; // Assumindo que `results` é o array de resultados da API
-        }))  
-
-        
-
+        })
+      );
 
       res.status(200).json(results);
     } catch (error) {

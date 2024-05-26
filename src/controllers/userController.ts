@@ -88,18 +88,19 @@ export class UserController {
 
   async addTittle(req: Request, res: Response) {
     try {
-      const { email, tittle } = req.body;
+      const { email, title } = req.body;
       const user = await UserModel.findOne({ email: email });
+      console.log(email, title);
 
       if (!user) {
         throw new BadRequestError("Usuário não encontrado");
       }
 
-      if (user.myList.includes(tittle)) {
+      if (user.myList.includes(title)) {
         throw new BadRequestError("Título já está na lista");
       }
 
-      user.myList.push(tittle);
+      user.myList.push(title);
       await user.save();
 
       res.status(201).send();
@@ -114,17 +115,18 @@ export class UserController {
 
   async deleteTittle(req: Request, res: Response) {
     try {
-      const { email, tittle } = req.body;
+      const { email, title } = req.body;
       const user = await UserModel.findOne({ email: email });
       if (!user) {
         throw new BadRequestError("Usuário não encontrado");
       }
-
-      if (!user.myList.includes(tittle)) {
+      console.log(title);
+      console.log(user.myList);
+      if (!user.myList.includes(title)) {
         throw new BadRequestError("Título não está na lista");
       }
 
-      user.myList = user.myList.filter((movie) => movie !== tittle);
+      user.myList = user.myList.filter((movie) => movie !== title);
       await user.save();
 
       res.status(200).send();
