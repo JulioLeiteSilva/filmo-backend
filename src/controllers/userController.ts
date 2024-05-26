@@ -62,7 +62,7 @@ export class UserController {
       results = await Promise.all(
         myList.map(async (query) => {
           const result = await movieService.searchMovie(query);
-          return result.results[0]; // Assumindo que `results` é o array de resultados da API
+          return result.results[0];
         })
       );
     }

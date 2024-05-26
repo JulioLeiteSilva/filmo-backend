@@ -5,7 +5,6 @@ import { authMiddleware } from "../middlewares/authMidlleware";
 const router = express.Router();
 const userController = new UserController();
 
-// Rota para criar um novo usuário
 router.post("/create", userController.createUser);
 
 router.post("/login", userController.login);

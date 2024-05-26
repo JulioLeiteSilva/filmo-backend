@@ -21,15 +21,12 @@ export class MovieService {
             return response.data;
         } catch (error) {
             if (axios.isAxiosError(error)) {
-                // Erro de Axios
                 console.error(`Error fetching data for query "${query}": ${error.message}`);
                 throw new Error(`Error fetching data from TMDb: ${error.message}`);
             } else if (error instanceof Error) {
-                // Outros erros
                 console.error(`Error fetching data for query "${query}": ${error.message}`);
                 throw new Error(`Error fetching data from TMDb: ${error.message}`);
             } else {
-                // Caso o erro seja realmente desconhecido
                 console.error(`Unknown error fetching data for query "${query}"`);
                 throw new Error('Unknown error fetching data from TMDb');
             }

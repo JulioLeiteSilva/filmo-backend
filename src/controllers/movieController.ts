@@ -43,7 +43,7 @@ export class MovieController {
       const results: Movie[] = await Promise.all(
         movieTitles.map(async (query) => {
           const result = await movieService.searchMovie(query);
-          return result.results[0]; // Assumindo que `results` é o array de resultados da API
+          return result.results[0];
         })
       );
 

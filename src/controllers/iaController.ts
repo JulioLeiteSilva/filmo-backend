@@ -22,7 +22,7 @@ export class IaController {
       const resultAI = JSON.parse(stdout.trim());
 
       try {
-        const queries: string[] = resultAI; // Receber a lista de strings no corpo da requisição
+        const queries: string[] = resultAI;
 
         if (!queries || !Array.isArray(queries)) {
           res
@@ -34,7 +34,7 @@ export class IaController {
         const results: Movie[] = await Promise.all(
           queries.map(async (query) => {
             const result = await movieService.searchMovie(query);
-            return result.results[0]; // Assumindo que `results` é o array de resultados da API
+            return result.results[0];
           })
         );
 

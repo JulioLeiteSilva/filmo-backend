@@ -3,7 +3,6 @@ export interface Movie {
     title: string;
     overview: string;
     release_date: string;
-    // Adicione outros campos conforme necessário
 }
 
 export interface TMDbResponse {
